@@ -5,7 +5,7 @@ The demonstration code can be found here DNAzip.
 The code is written in standard C++. We have used GNU C++ to compile in the provided makefile, but other C++ compilers should work. The resulting executable program is "perftest", currently as a demonstration program it is hard-coded to look for specific reference genome, reference SNP map, and genome to be compressed.
 
 ## Prep
-To run the code, you will need the following two datasets:
+To run the code, you will need the following two datasets that can be downloded from: http://www.ics.uci.edu/~dnazip/
 
 The human reference genome (hg18, 840MB). This is the exact same data from UCSC goldenPath, you will likely achieve faster download directly from UCSC. There are 25 FASTA files, one for each chromosome and the mitochondrial genome (which typically isn't used), that should be uncompressed and placed in a "chr" subdirectory under the source code.
 dbSNP database, 140MB, used as the refernece SNP map. The SNP data is based upon NCBI dbSNP build 129, but we use the UCSC SNP track as it has pre-processed all of the needed data into a single table. The UCSC Table Browser can be used to acquire the SNPs (group: Variation and Repeats, track: SNPs (129), table: snp129). There are 25 FASTA files, one for each chromosome and the mitochondrial genome. These should be in a "dbSNP" subdirectory under the source code.
