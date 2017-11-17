@@ -34,3 +34,4 @@ You've Got Email -- A Human Genome, Bio-IT World
 Funding
 
 Development of DNAzip is partially supported by funding from National Science Foundaton.
+http://www.ics.uci.edu/~dnazip/
