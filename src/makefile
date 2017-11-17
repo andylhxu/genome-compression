@@ -7,6 +7,7 @@ CC = g++
 CPPFLAGS = -O3
 
 all: perftest
+	mv perftest ../
 
 input.o: input.h 
 
@@ -29,4 +30,4 @@ perftest.o: input.h output.h dbSNPCompression.h dbSNPDeCompression.h watsonFileG
 perftest: perftest.o bitfile.o huffman.o input.o output.o dbSNPCompression.o dbSNPDeCompression.o kMerFreqGenerator.o watsonFileGenerator.o
 
 clean:
-	@rm perftest *.o
+	@rm ../perftest *.o
