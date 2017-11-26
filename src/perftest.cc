@@ -45,7 +45,7 @@ int main()
 	testWatsonFileGenerator(  "files//JWB-snps-submission.txt", 
 			"files//JWB-indels-submission", "files//JWB-unified-file.txt" );
 	//generate the frequencies of all the KMers
-	testKMerFreq(4, "files//JWB-unified-file.txt", "files//JWB-in-posFreq4.txt");	
+	testKMerFreq(4, "files//JWB-unified-file.txt", "files//JWB-in-posFreq4.txt");
 	//do the compression	
 	testdbCompression( "files//JWB-in-posFreq4.txt", "files//JWB-unified-file.txt", "files//JWB-unified-compression.txt" );
 	//do the deCompression
