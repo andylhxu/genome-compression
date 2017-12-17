@@ -64,7 +64,11 @@ def applyDiffOn(seq, diffs):
     print("Total {} deltas applied.".format(len(diffs)))
     return newSeq
 
-def run(chrName, refDirectory, deltaFile):
+def output(seq, outputDirectory, chrName):
+    with open('{}/{}.txt'.format(outputDirectory, chrName), "w") as f:
+        f.write(seq)
+
+def run(chrName, refDirectory, deltaFile, outputDirectory):
     # seq = readSequence('chrY-small.fa')
     seq = readSequence('{}/{}.fa'.format(refDirectory, chrName))
     print("Read reference sequence of length: {}".format(len(seq)))
@@ -72,20 +76,23 @@ def run(chrName, refDirectory, deltaFile):
     # diffs = serializeDiffs("smalldel.txt")
     print("Found {} deltas".format(len(diffs)))
     newSeq = applyDiffOn(seq, diffs)
-    print("Constructed new sequence length: {}".format(len(newSeq)))
-    print("Diff between new and reference: {}".format(len(newSeq) - len(seq)))
-
+    diffLen = len(newSeq) - len(seq)
+    print("Constructed new sequence length: {}({:.3f}%)".format(len(newSeq), 100 * diffLen / len(seq)))
+    newSeqWithoutN = newSeq.replace("N", "")
+    newSeqWithoutN = newSeq.replace("\n", "")
+    print("Removed {} N's (unknown bases)".format(len(newSeq) - len(newSeqWithoutN)))
+    output(newSeqWithoutN, outputDirectory, chrName)
 
 def main():
-    if len(sys.argv) != 3:
-        print("Usage: ./apply_diff.py <chrX ref directory> <delta file>")
+    if len(sys.argv) != 4:
+        print("Usage: ./apply_diff.py <chrX ref directory> <delta file> <output directory>")
         sys.exit()
     chrs = [str(i) for i in range(1, 23)]
     chrs += ["X", "Y", "M"]
     for chrNum in chrs:
         name = "chr{}".format(chrNum)
         print("==BEGIN {}===".format(name))
-        run(name, sys.argv[1], sys.argv[2])
+        run(name, sys.argv[1], sys.argv[2], sys.argv[3])
         print("==END {}===".format(name))
         print("")
 main()
