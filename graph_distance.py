@@ -1,41 +1,45 @@
 #!/usr/bin/env python3
-from common import serializeDiffs2, serializeDiffsSNP, serializeVCFSNP
+from common import serializeDiffs2, serializeDiffsSNP, serializeVCFSNP, preprocessDiffsIntoFreqDist
 from collections import Counter
 import sys
 import numpy as np
+from scipy.optimize import curve_fit
+from numpy.polynomial.polynomial import polyfit, polyval
 
 import matplotlib.pyplot as plt
 
-def graph(diffs):
-    x = []
-    ctr = Counter()
-    for i in range(len(diffs) - 1):
-        dist = diffs[i+1][1] - diffs[i][1]
-        ctr[dist] += 1
-        x.append(dist)
-    print(ctr.most_common(10))
-
-    plt.hist(x, bins=100,range=(0,1000))
-    plt.show()
-
 def scatter(diffs):
-    ctr = Counter()
-    totalCount = len(diffs)
-    for i in range(len(diffs) - 1):
-        # dist = diffs[i+1][1] - diffs[i][1]
-        dist = diffs[i+1] - diffs[i]
-        ctr[dist] += 1
-    print(ctr.most_common(10))
-    x = []
-    y = []
-    for item in ctr.items():
-        if (item[0] == 0):
-            continue
-        x.append(item[0])
-        y.append(item[1])
-
-    plt.scatter(np.log10(x),np.log10(y), s=2, alpha=0.5)
+    x,y = preprocessDiffsIntoFreqDist(diffs)
+    # popt = fit(x,y)
+    coefs = fit2(np.log10(x),np.log10(y))
+    # plawcoefs = fit(np.log10(x),np.log10(y)) 
+    plt.scatter(np.log10(x),np.log10(y), s=2, alpha=0.2)
+    xfit = np.arange(0, 5, 0.01)
+    # yfit = poly(xfit, popt[0], popt[1], popt[2], popt[3], popt[4], popt[5])
+    yfit = polyval(xfit, coefs)
+    # yfit = logistic(xfit, plawcoefs[0], plawcoefs[1], plawcoefs[2])
+    plt.plot(xfit,yfit)
     plt.show()
+
+
+def powerlaw(x, alpha, beta, gamma, d0):
+    y = x**(alpha/gamma) + (x/d0)**(beta/gamma)
+    print(x.shape)
+    print(y.shape)
+    return y**gamma
+
+def logistic(x, a,b,c):
+    return (a)/ (1 + np.exp(1)**(x-b)) - c
+
+def fit(x,y):
+    popt, pcov = curve_fit(logistic, x,y, bounds=(0,6))
+    print(popt)
+    return popt
+
+def fit2(x,y):
+    coeffs = polyfit(x,y, 6)
+    print(coeffs)
+    return coeffs
 
 def main():
     if len(sys.argv) != 3 and len(sys.argv) != 2:
