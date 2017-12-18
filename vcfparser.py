@@ -36,9 +36,10 @@ def construct_deltas(vcfFileName):
     return samples_delta
 
 def main():
-    if len(sys.argv) != 2:
-        print("Usage python3 vcfparser.py <vcf file path>")
+    if len(sys.argv) != 3:
+        print("Usage python3 vcfparser.py <vcf file path> <sample count>")
         sys.exit(1)
     name = sys.argv[1]
+    HUMAN_COUNT = int(sys.argv[2])
     construct_deltas(name)
 main()
