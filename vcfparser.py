@@ -4,6 +4,7 @@ import sys
 
 HUMAN_COUNT = 3
 NAME = "chr22-phase3"
+DUMPING_RATE = 50000
 
 def construct_deltas(vcfFileName):
     vcf_reader = vcf.Reader(open(vcfFileName, 'r'))
@@ -19,7 +20,7 @@ def construct_deltas(vcfFileName):
     for i,record in enumerate(vcf_reader):
         if i % 100 == 0:
             print(i)
-        if i % 1000 == 0 and i > 1:
+        if i % DUMPING_RATE == 0 and i > 1:
             dumpFileName = "source{}-samples{}-scanned{}.pkl".format(NAME, HUMAN_COUNT, i)
             f = open(dumpFileName, "wb")
             pickle.dump(samples_delta, f)
