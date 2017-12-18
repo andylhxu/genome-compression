@@ -20,4 +20,5 @@ This script attempts to fit and graph the (logarithmized) SNP distance distribut
 
 It takes in a pickle file generated from vcfparser.py, a sample # (depends on how many samples are extracted by vcfparser) and the degree of the polynomial to fit with. Notice that the graph normalizes the curve by taking base-10 log of both x and y axes.
 
-## generate_huffman.py
+## evaluate_huffman.py
+
