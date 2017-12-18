@@ -26,14 +26,14 @@ def compute_cost(book, ctr):
     return res
 
 def main():
-    if len(sys.argv) != 2:
-        print("Usage: ./generate_huffman.py <delta pickle file>")
+    if len(sys.argv) != 4:
+        print("Usage: ./generate_huffman.py <pickle SNP pos file> <sample #> <polynomial degree>")
         sys.exit(1)
 
-    diffs = serializeVCFSNP(sys.argv[1], 2)
+    diffs = serializeVCFSNP(sys.argv[1], int(sys.argv[2]))
     x,y,totalCount,ctr = preprocessDiffsIntoFreqDist(diffs)
     bookFreq = generate_freq_codebook(ctr)
-    coeffs = fit_polynomial(x,y)
+    coeffs = fit_polynomial(x,y, int(sys.argv[3]))
     bookPoly = generate_polynomial_codebook(coeffs, totalCount, max(x), ctr)
     costFreq = compute_cost(bookFreq, ctr)
     costPoly = compute_cost(bookPoly, ctr)
