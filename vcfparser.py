@@ -1,6 +1,7 @@
 import vcf
 import pickle
 import sys
+from random import shuffle, seed
 
 HUMAN_COUNT = 3
 NAME = "chr22-phase3"
@@ -11,11 +12,16 @@ def construct_deltas(vcfFileName):
 
     samples = []
     samples_delta = {}
-    for i,human in enumerate(vcf_reader.samples):
+    seed(3)
+    shuffledSamples = vcf_reader.samples[:]
+    shuffle(shuffledSamples)
+    for i,human in enumerate(shuffledSamples):
         if i >= HUMAN_COUNT:
             break
         samples.append(human)
         samples_delta[human] = []
+
+    print("Selected {}".format(samples))
 
     for i,record in enumerate(vcf_reader):
         if i % 100 == 0:
@@ -41,6 +47,7 @@ def main():
         print("Usage python3 vcfparser.py <vcf file path> <sample count>")
         sys.exit(1)
     name = sys.argv[1]
+    global HUMAN_COUNT
     HUMAN_COUNT = int(sys.argv[2])
     construct_deltas(name)
 main()
