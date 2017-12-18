@@ -4,6 +4,8 @@ from Bio import SeqIO,Seq,SeqRecord
 from Bio.Alphabet import DNAAlphabet
 import sys
 
+from common import serializeDiffs
+
 def readSequence(name):
     seqs = SeqIO.parse(name, 'fasta')
     seq = ""
@@ -11,33 +13,6 @@ def readSequence(name):
         assert(i < 1) # make suree there's only one sequence per file
         seq = record.seq
     return seq
-
-def serializeDiffs(diffFileName, chrName):
-    diffs = []
-    lastDelPos = 0
-    lastDelLength = 0
-    with open(diffFileName, "r") as f:
-        for line in f:
-            delta = line.split(',')
-            posOfDelta = int(delta[2])
-            if delta[1] != chrName:
-                continue
-            if delta[0] == "0": #SNP
-                diffs.append((0, posOfDelta - 1, delta[3][2]))
-            elif delta[0] == "1": # deletion
-                lengthToRemove = len(delta[3].split("/")[0])
-                contentToRemove = delta[3].split("/")[0]
-                if (posOfDelta - 1 - lastDelPos < lastDelLength):
-                    continue
-                diffs.append((1, posOfDelta - 1, lengthToRemove, contentToRemove))
-                lastDelPos = posOfDelta - 1
-                lastDelLength = lengthToRemove
-            else: # insertion
-                assert(delta[0] == "2")
-                stringToInsert = delta[3].split("/")[1]
-                diffs.append((2, posOfDelta - 1, stringToInsert))
-    diffs.sort(key=lambda x:x[1])
-    return diffs
 
 def applyDiffOn(seq, diffs):
     newSeqList = []
@@ -79,8 +54,8 @@ def run(chrName, refDirectory, deltaFile, outputDirectory):
     diffLen = len(newSeq) - len(seq)
     print("Constructed new sequence length: {}({:.3f}%)".format(len(newSeq), 100 * diffLen / len(seq)))
     newSeqWithoutN = newSeq.replace("N", "")
-    newSeqWithoutN = newSeq.replace("\n", "")
-    print("Removed {} N's (unknown bases)".format(len(newSeq) - len(newSeqWithoutN)))
+    newSeqWithoutN = newSeqWithoutN.replace("\n", "")
+    print("Removed {} N's (unknown bases) and spaces".format(len(newSeq) - len(newSeqWithoutN)))
     output(newSeqWithoutN, outputDirectory, chrName)
 
 def main():
