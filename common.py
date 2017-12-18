@@ -82,14 +82,14 @@ def preprocessDiffsIntoFreqDist(diffs):
     for item in ctr.items():
         if (item[0] == 0):
             continue
-        x.append(item[0])
+        x.append(int(item[0]))
         y.append(item[1])
 
     # normalize y from count distribution to frequency distribution
     totalCount = sum(y)
     print("totalCount: {}".format(totalCount) )
     y = np.array(y) / totalCount
-    return (x,y)
+    return (x,y,totalCount, ctr)
 
 def main():
     # tester
