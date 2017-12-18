@@ -62,12 +62,14 @@ def serializeDiffsSNP(diffFileName, chrName=None):
     return diffs
 
 
-
 def serializeVCFSNP(pickleFileName, humanNum):
     with open(pickleFileName, "rb") as f:
         samplesDiffs = pickle.load(f)
-        sampleName = list(samplesDiffs.keys())[humanNum]
-        return samplesDiffs[sampleName]
+        if humanNum > 0:
+            sampleName = list(samplesDiffs.keys())[humanNum]
+            return samplesDiffs[sampleName]
+        else:
+            return samplesDiffs
 
 def preprocessDiffsIntoFreqDist(diffs):
     ctr = Counter()
@@ -76,7 +78,7 @@ def preprocessDiffsIntoFreqDist(diffs):
         # dist = diffs[i+1][1] - diffs[i][1]
         dist = diffs[i+1] - diffs[i]
         ctr[dist] += 1
-    print(ctr.most_common(10))
+    # print(ctr.most_common(10))
     x = []
     y = []
     for item in ctr.items():
@@ -87,7 +89,7 @@ def preprocessDiffsIntoFreqDist(diffs):
 
     # normalize y from count distribution to frequency distribution
     totalCount = sum(y)
-    print("totalCount: {}".format(totalCount) )
+    # print("totalCount: {}".format(totalCount) )
     y = np.array(y) / totalCount
     return (x,y,totalCount, ctr)
 

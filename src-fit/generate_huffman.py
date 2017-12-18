@@ -8,7 +8,7 @@ import numpy as np
 
 def generate_freq_codebook(counter):
     # print(counter)
-    print("freq distance count: {}".format(len(counter)))
+    # print("freq distance count: {}".format(len(counter)))
     return huffman.codebook(counter.items())
 
 def generate_polynomial_codebook(coeffs, n, maxDistance, originalCounter):
@@ -16,7 +16,7 @@ def generate_polynomial_codebook(coeffs, n, maxDistance, originalCounter):
     for distance, _ in originalCounter.items():
         freq = 10**polyval(np.log10(distance), coeffs)
         ctr[distance] = int(freq* n)
-    print("poly distance count: {}".format(len(originalCounter)))
+    # print("poly distance count: {}".format(len(originalCounter)))
     return huffman.codebook(ctr.items())
 
 def compute_cost(book, ctr):
@@ -27,18 +27,29 @@ def compute_cost(book, ctr):
 
 def main():
     if len(sys.argv) != 4:
-        print("Usage: ./generate_huffman.py <pickle SNP pos file> <sample #> <polynomial degree>")
+        print("Usage: ./evaluate_huffman.py <pickle SNP pos file> <sample # (-1 for all samples)> <polynomial degree>")
         sys.exit(1)
 
     diffs = serializeVCFSNP(sys.argv[1], int(sys.argv[2]))
-    x,y,totalCount,ctr = preprocessDiffsIntoFreqDist(diffs)
-    bookFreq = generate_freq_codebook(ctr)
-    coeffs = fit_polynomial(x,y, int(sys.argv[3]))
-    bookPoly = generate_polynomial_codebook(coeffs, totalCount, max(x), ctr)
-    costFreq = compute_cost(bookFreq, ctr)
-    costPoly = compute_cost(bookPoly, ctr)
 
-    print(costFreq)
-    print(costPoly)
-    print(costPoly / costFreq)
+    if int(sys.argv[2]) >= 0:
+        x,y,totalCount,ctr = preprocessDiffsIntoFreqDist(diffs)
+        bookFreq = generate_freq_codebook(ctr)
+        coeffs = fit_polynomial(x,y, int(sys.argv[3]))
+        bookPoly = generate_polynomial_codebook(coeffs, totalCount, max(x), ctr)
+        costFreq = compute_cost(bookFreq, ctr)
+        costPoly = compute_cost(bookPoly, ctr)
+
+        print(costFreq)
+        print(costPoly)
+        print(costPoly / costFreq)
+    else:
+        for sample, sampleDiffs in diffs.items():
+            x,y,totalCount,ctr = preprocessDiffsIntoFreqDist(sampleDiffs)
+            bookFreq = generate_freq_codebook(ctr)
+            coeffs = fit_polynomial(x,y, int(sys.argv[3]))
+            bookPoly = generate_polynomial_codebook(coeffs, totalCount, max(x), ctr)
+            costFreq = compute_cost(bookFreq, ctr)
+            costPoly = compute_cost(bookPoly, ctr)
+            print("Sample {} ratio: {}".format(sample, costPoly/costFreq))
 main()
