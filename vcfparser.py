@@ -38,6 +38,7 @@ def construct_deltas(vcfFileName):
 def main():
     if len(sys.argv) != 2:
         print("Usage python3 vcfparser.py <vcf file path>")
-    name = './ALL.chr22.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf'
+        sys.exit(1)
+    name = sys.argv[1]
     construct_deltas(name)
 main()
