@@ -44,6 +44,7 @@ def main():
         print(costPoly)
         print(costPoly / costFreq)
     else:
+        ratioList = []
         for sample, sampleDiffs in diffs.items():
             x,y,totalCount,ctr = preprocessDiffsIntoFreqDist(sampleDiffs)
             bookFreq = generate_freq_codebook(ctr)
@@ -51,5 +52,11 @@ def main():
             bookPoly = generate_polynomial_codebook(coeffs, totalCount, max(x), ctr)
             costFreq = compute_cost(bookFreq, ctr)
             costPoly = compute_cost(bookPoly, ctr)
-            print("Sample {} ratio: {}".format(sample, costPoly/costFreq))
+            ratio = costPoly/costFreq
+            ratioList.append(ratio)
+            print("Sample {} ratio: {}".format(sample, ratio))
+        avg = np.mean(ratioList)
+        std = np.std(ratioList)
+        print("Avg sample ratio: {}".format(avg))
+        print("Stddev sample ratio: {}".format(std))
 main()
