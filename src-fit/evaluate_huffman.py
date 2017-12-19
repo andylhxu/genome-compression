@@ -46,7 +46,9 @@ def process(name, diffs):
     y_poly = np.array([e[1] for e in polyCtr.items()])
     y_poly = y_poly / np.linalg.norm(y_poly, ord=1)
     assert(len(y) == len(y_poly))
+    h = entropy(y_poly, base=2)
     kl = entropy(y_poly, y, base=2)
+    print("Entropy of empirical distribution: {}".format(h))
     print("KL Divergence: {}".format(kl))
     return costFreqTable - bitsSacrificed
 
