@@ -65,7 +65,7 @@ def serializeDiffsSNP(diffFileName, chrName=None):
 def serializeVCFSNP(pickleFileName, humanNum):
     with open(pickleFileName, "rb") as f:
         samplesDiffs = pickle.load(f)
-        if humanNum > 0:
+        if humanNum >= 0:
             sampleName = list(samplesDiffs.keys())[humanNum]
             return samplesDiffs[sampleName]
         else:

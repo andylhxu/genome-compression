@@ -7,11 +7,18 @@ from scipy.optimize import curve_fit
 from numpy.polynomial.polynomial import polyfit, polyval
 from fit_polynomial import fit_polynomial
 import matplotlib.pyplot as plt
-
+plt.figure(figsize=(20,10))
 def scatter(diffs, deg, show=True, sampleID=0):
     x,y,_,_ = preprocessDiffsIntoFreqDist(diffs)
     coefs = fit_polynomial(x,y, deg)
-    plt.scatter(np.log10(x),np.log10(y), s=2, alpha=0.2)
+    plt.scatter(x,y, s=10, alpha=0.4, marker="x", color='r')
+    if show:
+        plt.show()
+    plt.clf()
+    plt.scatter(np.log10(x),np.log10(y), s=10, alpha=0.4, marker="x", color='r')
+    if show:
+        plt.show()
+        plt.scatter(np.log10(x),np.log10(y), s=10, alpha=0.4, marker="x", color='r')
     xfit = np.arange(0, np.log10(max(x)), 0.01)
     yfit = polyval(xfit, coefs)
     plt.plot(xfit,yfit)
