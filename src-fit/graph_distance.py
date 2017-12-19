@@ -7,7 +7,7 @@ from scipy.optimize import curve_fit
 from numpy.polynomial.polynomial import polyfit, polyval
 from fit_polynomial import fit_polynomial
 import matplotlib.pyplot as plt
-plt.figure(figsize=(20,10))
+
 def scatter(diffs, deg, show=True, sampleID=0):
     x,y,_,_ = preprocessDiffsIntoFreqDist(diffs)
     coefs = fit_polynomial(x,y, deg)
@@ -27,7 +27,7 @@ def scatter(diffs, deg, show=True, sampleID=0):
     else:
         imgName = "sample{}_deg{}.png".format(sampleID, deg)
         print("Image {} saved.".format(imgName))
-        plt.savefig(imgName)
+        plt.savefig(imgName, dpi=500)
         plt.clf()
 
 def main():
