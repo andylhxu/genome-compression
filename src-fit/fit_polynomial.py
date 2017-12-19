@@ -6,6 +6,6 @@ from scipy.optimize import curve_fit
 from numpy.polynomial.polynomial import polyfit, polyval
 
 def fit_polynomial(x,y, degree):
-    coefs = polyfit(np.log10(x),np.log10(y), degree)
+    coefs = polyfit(np.log10(x),np.log10(y),w=np.sqrt(y), deg=degree)
     return coefs
 
